@@ -14,7 +14,7 @@ import lombok.Data;
 public class Medication {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name")
     @NotBlank
