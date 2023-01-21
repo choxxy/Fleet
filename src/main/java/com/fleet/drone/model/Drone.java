@@ -32,7 +32,7 @@ public class Drone {
     @Column(name = "battery_level")
     @Min(value = 0)
     @Max(value = 100)
-    private Integer batteryCapacity;
+    private Integer batteryLevel;
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)

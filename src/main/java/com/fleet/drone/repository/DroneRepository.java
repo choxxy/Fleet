@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DroneRepository extends JpaRepository<Drone, String>, JpaSpecificationExecutor<Drone> {
-    @Query("SELECT batteryCapacity FROM Drone WHERE serialNumber = :serialNumber")
+    @Query("SELECT batteryLevel FROM Drone WHERE serialNumber = :serialNumber")
     Integer findDroneBatteryCapacity(String serialNumber);
 }

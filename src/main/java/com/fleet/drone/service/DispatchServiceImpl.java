@@ -68,7 +68,6 @@ public class DispatchServiceImpl implements DispatchService {
         Drone drone = droneMapper.toEntity(droneService.findBySerialNumber(serialNumber));
 
 
-
         for (Integer id : medicationIdList) {
             Medication medication = medicationMapper.toEntity(medicationService.findById(id));
             DispatchDto dispatchDto = new DispatchDto();

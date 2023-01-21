@@ -23,4 +23,8 @@ public interface DroneService {
     String getDroneBatteryLevel(String serialNumber);
 
     List<DroneDto> findAvailableDrones();
+
+    void logDronesBatteryLevel();
+
+    void updateBatteryLevel();
 }

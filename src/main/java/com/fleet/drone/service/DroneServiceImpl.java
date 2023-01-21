@@ -19,6 +19,8 @@ import java.util.List;
 @Service
 @Transactional
 public class DroneServiceImpl implements DroneService {
+
+
     private final DroneRepository repository;
     private final DroneMapper droneMapper;
 
@@ -73,5 +75,32 @@ public class DroneServiceImpl implements DroneService {
     @Override
     public List<DroneDto> findAvailableDrones() {
         return null;
+    }
+
+    @Override
+    public void logDronesBatteryLevel() {
+        List<Drone> drones = repository.findAll();
+
+        for (Drone drone : drones) {
+            log.info("Drone {} battery level {}%", drone.getSerialNumber(), drone.getBatteryLevel());
+        }
+    }
+
+    @Override
+    public void updateBatteryLevel() {
+
+        List<Drone> drones = repository.findAll();
+
+        for (Drone drone : drones) {
+            int level = drone.getBatteryLevel();
+            if (level >= 0 && level <= 5) {
+                drone.setBatteryLevel(100);
+            } else {
+                level -= 5;
+                drone.setBatteryLevel(level);
+            }
+            repository.save(drone);
+        }
+
     }
 }
