@@ -1,4 +1,4 @@
-package com.fleet.dispatch.dto;
+package com.fleet.drone.dto;
 
 import com.fleet.drone.model.Drone;
 import com.fleet.medication.model.Medication;

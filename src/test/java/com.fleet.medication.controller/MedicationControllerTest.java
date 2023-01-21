@@ -20,10 +20,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 @Transactional
 public class MedicationControllerTest {
     private static final String ENDPOINT_URL = "/api/medication";
+    private static final String FIND_ALL_ENDPOINT_URL = "/api/medication/";
+    private static final String REGISTER_ENDPOINT_URL = "/api/medication/register";
     @InjectMocks
     private MedicationController medicationController;
     @Mock
@@ -41,18 +44,18 @@ public class MedicationControllerTest {
     }
 
     @Test
-    public void findAllByPage() throws Exception {
-        Page<MedicationDto> page = new PageImpl<>(Collections.singletonList(MedicationBuilder.getDto()));
+    public void findAll() throws Exception {
+        List<MedicationDto> dtoList = Collections.singletonList(MedicationBuilder.getDto());
 
-        Mockito.when(medicationService.findByCondition(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(page);
+        Mockito.when(medicationService.findAll()).thenReturn(dtoList);
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_URL)
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(FIND_ALL_ENDPOINT_URL)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content", Matchers.hasSize(1)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
 
-        Mockito.verify(medicationService, Mockito.times(1)).findByCondition(ArgumentMatchers.any(), ArgumentMatchers.any());
+        Mockito.verify(medicationService, Mockito.times(1)).findAll();
         Mockito.verifyNoMoreInteractions(medicationService);
 
     }
@@ -71,11 +74,11 @@ public class MedicationControllerTest {
     }
 
     @Test
-    public void save() throws Exception {
+    public void register() throws Exception {
         Mockito.when(medicationService.save(ArgumentMatchers.any(MedicationDto.class))).thenReturn(MedicationBuilder.getDto());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post(ENDPOINT_URL)
+                MockMvcRequestBuilders.post(REGISTER_ENDPOINT_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(CustomUtils.asJsonString(MedicationBuilder.getDto())))
                 .andExpect(MockMvcResultMatchers.status().isCreated());

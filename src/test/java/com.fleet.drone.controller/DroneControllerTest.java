@@ -20,10 +20,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 @Transactional
 public class DroneControllerTest {
     private static final String ENDPOINT_URL = "/api/drone";
+    private static final String REGISTER_ENDPOINT_URL = "/api/drone/register";
+    private static final String FINA_ALL_ENDPOINT_URL = "/api/drone/";
+
     @InjectMocks
     private DroneController droneController;
     @Mock
@@ -41,18 +45,18 @@ public class DroneControllerTest {
     }
 
     @Test
-    public void findAllByPage() throws Exception {
-        Page<DroneDto> page = new PageImpl<>(Collections.singletonList(DroneBuilder.getDto()));
+    public void findAll() throws Exception {
+        List<DroneDto> list = Collections.singletonList(DroneBuilder.getDto());
 
-        Mockito.when(droneService.findByCondition(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(page);
+        Mockito.when(droneService.findAll()).thenReturn(list);
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_URL)
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(FINA_ALL_ENDPOINT_URL)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.content", Matchers.hasSize(1)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
 
-        Mockito.verify(droneService, Mockito.times(1)).findByCondition(ArgumentMatchers.any(), ArgumentMatchers.any());
+        Mockito.verify(droneService, Mockito.times(1)).findAll();
         Mockito.verifyNoMoreInteractions(droneService);
 
     }
@@ -65,21 +69,21 @@ public class DroneControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Is.is(1)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.serialNumber", Is.is(1)));
         Mockito.verify(droneService, Mockito.times(1)).findBySerialNumber("1");
         Mockito.verifyNoMoreInteractions(droneService);
     }
 
     @Test
-    public void save() throws Exception {
-        Mockito.when(droneService.save(ArgumentMatchers.any(DroneDto.class))).thenReturn(DroneBuilder.getDto());
+    public void register() throws Exception {
+        Mockito.when(droneService.register(ArgumentMatchers.any(DroneDto.class))).thenReturn(DroneBuilder.getDto());
 
         mockMvc.perform(
-                MockMvcRequestBuilders.post(ENDPOINT_URL)
+                MockMvcRequestBuilders.post(REGISTER_ENDPOINT_URL)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(CustomUtils.asJsonString(DroneBuilder.getDto())))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
-        Mockito.verify(droneService, Mockito.times(1)).save(ArgumentMatchers.any(DroneDto.class));
+        Mockito.verify(droneService, Mockito.times(1)).register(ArgumentMatchers.any(DroneDto.class));
         Mockito.verifyNoMoreInteractions(droneService);
     }
 

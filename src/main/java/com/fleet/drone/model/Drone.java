@@ -13,18 +13,27 @@ public class Drone {
     @Id
     @Column(name = "serial_number", length = 100)
     String serialNumber;
+
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    DroneStatus status;
+
     @Column(name = "model")
     @Enumerated(EnumType.STRING)
     @NotNull
     DroneModel model;
+
     @Column(name = "weight_limit")
     @Min(value = 0)
     @Max(value = 500)
     private Integer weightLimit;
-    @Column(name = "battery_capacity")
+
+    @Column(name = "battery_level")
     @Min(value = 0)
     @Max(value = 100)
     private Integer batteryCapacity;
+
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
     @NotNull

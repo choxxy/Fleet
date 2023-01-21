@@ -1,8 +1,9 @@
-package com.fleet.dispatch.mapper;
+package com.fleet.drone.mapper;
+
 
 import com.fleet.common.mapper.EntityMapper;
-import com.fleet.dispatch.dto.DispatchDto;
-import com.fleet.dispatch.model.Dispatch;
+import com.fleet.drone.dto.DispatchDto;
+import com.fleet.drone.model.Dispatch;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

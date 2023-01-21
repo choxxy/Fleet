@@ -28,19 +28,19 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public DroneDto save(DroneDto droneDto) {
+    public DroneDto register(DroneDto droneDto) {
         Drone entity = droneMapper.toEntity(droneDto);
         return droneMapper.toDto(repository.save(entity));
     }
 
     @Override
-    public void deleteBySerialNumber(String id) {
-        repository.deleteById(id);
+    public void deleteBySerialNumber(String serialNumber) {
+        repository.deleteById(serialNumber);
     }
 
     @Override
-    public DroneDto findBySerialNumber(String id) {
-        return droneMapper.toDto(repository.findById(id).orElseThrow(ResourceNotFoundException::new));
+    public DroneDto findBySerialNumber(String serialNumber) {
+        return droneMapper.toDto(repository.findById(serialNumber).orElseThrow(ResourceNotFoundException::new));
     }
 
     @Override
@@ -51,10 +51,27 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public DroneDto update(DroneDto droneDto, String id) {
-        DroneDto data = findBySerialNumber(id);
+    public DroneDto update(DroneDto droneDto, String serialNumber) {
+        DroneDto data = findBySerialNumber(serialNumber);
         Drone entity = droneMapper.toEntity(droneDto);
         BeanUtils.copyProperties(data, entity);
-        return save(droneMapper.toDto(entity));
+        return droneMapper.toDto(repository.save(entity));
+    }
+
+    @Override
+    public List<DroneDto> findAll() {
+        List<Drone> drones = repository.findAll();
+        return droneMapper.toDto(drones);
+    }
+
+    @Override
+    public String getDroneBatteryLevel(String serialNumber) {
+        int batteryLevel = repository.findDroneBatteryCapacity(serialNumber);
+        return String.format("%d%%", batteryLevel);
+    }
+
+    @Override
+    public List<DroneDto> findAvailableDrones() {
+        return null;
     }
 }

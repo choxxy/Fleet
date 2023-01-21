@@ -1,0 +1,92 @@
+2023-01-21 15:47:59 database: flush
+org.h2.message.DbException: General error: "org.h2.mvstore.MVStoreException: The file is locked: /mnt/a23b073e-2da4-4216-a06e-cc6ee3863430/musala/joshua-achoka/data/fleet.mv.db [2.1.214/7]" [50000-214]
+	at org.h2.message.DbException.get(DbException.java:212)
+	at org.h2.message.DbException.convert(DbException.java:395)
+	at org.h2.mvstore.db.Store.lambda$new$0(Store.java:125)
+	at org.h2.mvstore.MVStore.handleException(MVStore.java:3318)
+	at org.h2.mvstore.MVStore.panic(MVStore.java:593)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:469)
+	at org.h2.mvstore.MVStore$Builder.open(MVStore.java:4082)
+	at org.h2.mvstore.db.Store.<init>(Store.java:136)
+	at org.h2.engine.Database.<init>(Database.java:324)
+	at org.h2.engine.Engine.openSession(Engine.java:92)
+	at org.h2.engine.Engine.openSession(Engine.java:222)
+	at org.h2.engine.Engine.createSession(Engine.java:201)
+	at org.h2.engine.SessionRemote.connectEmbeddedOrServer(SessionRemote.java:338)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:122)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.wisecoders.dbs.dbms.connect.model.envoy.Envoy.t(Envoy.java:72)
+	at com.wisecoders.dbs.dbms.connect.model.envoy.Envoy.a(Envoy.java:106)
+	at com.wisecoders.dbs.dbms.connect.fx.FxTestConnectivityTask.a(FxTestConnectivityTask.java:46)
+	at com.wisecoders.dbs.dbms.connect.fx.FxTestConnectivityTask.call(FxTestConnectivityTask.java:19)
+	at javafx.graphics/javafx.concurrent.Task$TaskCallable.call(Task.java:1426)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientException: General error: "org.h2.mvstore.MVStoreException: The file is locked: /mnt/a23b073e-2da4-4216-a06e-cc6ee3863430/musala/joshua-achoka/data/fleet.mv.db [2.1.214/7]" [50000-214]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:554)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:477)
+	... 26 more
+Caused by: org.h2.mvstore.MVStoreException: The file is locked: /mnt/a23b073e-2da4-4216-a06e-cc6ee3863430/musala/joshua-achoka/data/fleet.mv.db [2.1.214/7]
+	at org.h2.mvstore.DataUtils.newMVStoreException(DataUtils.java:1004)
+	at org.h2.mvstore.FileStore.open(FileStore.java:178)
+	at org.h2.mvstore.FileStore.open(FileStore.java:128)
+	at org.h2.mvstore.MVStore.<init>(MVStore.java:452)
+	... 20 more
+2023-01-21 15:48:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "triggers" not found (this database is empty); SQL statement:
+SELECT trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:07 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "sequences" not found (this database is empty); SQL statement:
+SELECT sequence_name, 'START WITH '||(current_value+1) FROM INFORMATION_SCHEMA.sequences WHERE sequence_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:09 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "constraints" not found (this database is empty); SQL statement:
+SELECT table_name, constraint_name, check_expression FROM INFORMATION_SCHEMA.constraints WHERE check_expression IS NOT NULL AND constraint_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "triggers" not found (this database is empty); SQL statement:
+SELECT trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "sequences" not found (this database is empty); SQL statement:
+SELECT sequence_name, 'START WITH '||(current_value+1) FROM INFORMATION_SCHEMA.sequences WHERE sequence_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:19 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "constraints" not found (this database is empty); SQL statement:
+SELECT table_name, constraint_name, check_expression FROM INFORMATION_SCHEMA.constraints WHERE check_expression IS NOT NULL AND constraint_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "triggers" not found (this database is empty); SQL statement:
+SELECT trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:41 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "sequences" not found (this database is empty); SQL statement:
+SELECT sequence_name, 'START WITH '||(current_value+1) FROM INFORMATION_SCHEMA.sequences WHERE sequence_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "triggers" not found (this database is empty); SQL statement:
+SELECT trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_schema='INFORMATION_SCHEMA' [42104-214]
+2023-01-21 15:48:44 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "sequences" not found (this database is empty); SQL statement:
+SELECT sequence_name, 'START WITH '||(current_value+1) FROM INFORMATION_SCHEMA.sequences WHERE sequence_schema='INFORMATION_SCHEMA' [42104-214]
+2023-01-21 15:48:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "constraints" not found (this database is empty); SQL statement:
+SELECT table_name, constraint_name, check_expression FROM INFORMATION_SCHEMA.constraints WHERE check_expression IS NOT NULL AND constraint_schema='INFORMATION_SCHEMA' [42104-214]
+2023-01-21 15:48:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "constraints" not found (this database is empty); SQL statement:
+SELECT table_name, constraint_name, check_expression FROM INFORMATION_SCHEMA.constraints WHERE check_expression IS NOT NULL AND constraint_schema='PUBLIC' [42104-214]
+2023-01-21 15:48:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "views" not found (this database is empty); SQL statement:
+SELECT table_name, view_definition FROM INFORMATION_SCHEMA.views WHERE table_schema='INFORMATION_SCHEMA' [42104-214]
+2023-01-21 15:50:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "triggers" not found (candidates are: "TRIGGERS"); SQL statement:
+SELECT trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_schema='PUBLIC' [42103-214]
+2023-01-21 15:50:16 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "sequences" not found (candidates are: "SEQUENCES"); SQL statement:
+SELECT sequence_name, 'START WITH '||(current_value+1) FROM INFORMATION_SCHEMA.sequences WHERE sequence_schema='PUBLIC' [42103-214]
+2023-01-21 15:50:18 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "triggers" not found (candidates are: "TRIGGERS"); SQL statement:
+SELECT trigger_name FROM INFORMATION_SCHEMA.triggers WHERE trigger_schema='INFORMATION_SCHEMA' [42103-214]
+2023-01-21 15:50:18 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "sequences" not found (candidates are: "SEQUENCES"); SQL statement:
+SELECT sequence_name, 'START WITH '||(current_value+1) FROM INFORMATION_SCHEMA.sequences WHERE sequence_schema='INFORMATION_SCHEMA' [42103-214]
+2023-01-21 15:50:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "constraints" not found; SQL statement:
+SELECT table_name, constraint_name, check_expression FROM INFORMATION_SCHEMA.constraints WHERE check_expression IS NOT NULL AND constraint_schema='PUBLIC' [42102-214]

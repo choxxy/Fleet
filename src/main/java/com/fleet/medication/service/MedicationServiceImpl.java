@@ -7,11 +7,8 @@ import com.fleet.medication.repository.MedicationRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -44,17 +41,16 @@ public class MedicationServiceImpl implements MedicationService {
     }
 
     @Override
-    public Page<MedicationDto> findByCondition(MedicationDto medicationDto, Pageable pageable) {
-        Page<Medication> entityPage = repository.findAll(pageable);
-        List<Medication> entities = entityPage.getContent();
-        return new PageImpl<>(medicationMapper.toDto(entities), pageable, entityPage.getTotalElements());
-    }
-
-    @Override
     public MedicationDto update(MedicationDto medicationDto, Integer id) {
         MedicationDto data = findById(id);
         Medication entity = medicationMapper.toEntity(medicationDto);
         BeanUtils.copyProperties(data, entity);
         return save(medicationMapper.toDto(entity));
+    }
+
+    @Override
+    public List<MedicationDto> findAll() {
+        List<Medication> medicationList = repository.findAll();
+        return medicationMapper.toDto(medicationList);
     }
 }

@@ -1,55 +1,76 @@
 package com.fleet.drone.controller;
 
 import com.fleet.drone.dto.DroneDto;
+import com.fleet.drone.service.DispatchService;
 import com.fleet.drone.service.DroneService;
+import com.fleet.medication.dto.MedicationDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @RequestMapping("/api/drone")
 @RestController
 @Slf4j
 public class DroneController {
     private final DroneService droneService;
+    private final DispatchService dispatchService;
 
-    public DroneController(DroneService droneService) {
+    public DroneController(DroneService droneService, DispatchService dispatchService) {
         this.droneService = droneService;
+        this.dispatchService = dispatchService;
     }
 
-    @PostMapping
-    public ResponseEntity<Void> save(@RequestBody @Validated DroneDto droneDto) {
-        droneService.save(droneDto);
-        return ResponseEntity.ok().build();
+    // drone registration
+    @PostMapping("/register")
+    public ResponseEntity<DroneDto> save(@RequestBody DroneDto droneDto) {
+        DroneDto result =  droneService.register(droneDto);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    // retrieve a drone
     @GetMapping("/{serialNumber}")
-    public ResponseEntity<DroneDto> findById(@PathVariable("serialNumber") String id) {
+    public ResponseEntity<DroneDto> getDrone(@PathVariable("serialNumber") String id) {
         DroneDto drone = droneService.findBySerialNumber(id);
         return ResponseEntity.ok(drone);
     }
 
-    @DeleteMapping("/{serialNumber}")
-    public ResponseEntity<Void> delete(@PathVariable("serialNumber") String serialNumber) {
-        Optional.ofNullable(droneService.findBySerialNumber(serialNumber)).orElseThrow(() -> {
-            log.error("Unable to delete non-existent data！");
-            return new ResourceNotFoundException();
-        });
-        droneService.deleteBySerialNumber(serialNumber);
-        return ResponseEntity.ok().build();
+    // retrieve a drone battery level
+    @GetMapping("/{serialNumber}/battery")
+    public ResponseEntity<String> getDroneBatteryLevel(@PathVariable("serialNumber") String serialNumber) {
+        String batterLevel = droneService.getDroneBatteryLevel(serialNumber);
+        return ResponseEntity.ok(batterLevel);
     }
 
-    @GetMapping("/page-query")
-    public ResponseEntity<Page<DroneDto>> pageQuery(DroneDto droneDto, @PageableDefault(sort = "serialNumber", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<DroneDto> dronePage = droneService.findByCondition(droneDto, pageable);
-        return ResponseEntity.ok(dronePage);
+    // get all drones
+    @GetMapping("/")
+    public ResponseEntity<List<DroneDto>> getAllDrones() {
+        List<DroneDto> drones = droneService.findAll();
+        return ResponseEntity.ok(drones);
+    }
+
+    // get available drones for loading
+    @GetMapping("/available")
+    public ResponseEntity<List<DroneDto>> getAvailableDrones() {
+        List<DroneDto> droneDtoList = dispatchService.findAvailableDrones();
+        return ResponseEntity.ok(droneDtoList);
+    }
+
+    // get medication load for drone
+    @GetMapping("/{serialNumber}/medications")
+    public ResponseEntity<List<MedicationDto>> getDroneLoadStatus(@PathVariable("serialNumber") String serialNumber) {
+        List<MedicationDto> medicationDtoList = dispatchService.findDroneMedicationLoad(serialNumber);
+        return ResponseEntity.ok(medicationDtoList);
+    }
+
+    // load a drone with medication
+    @PostMapping("/{serialNumber}/load")
+    public ResponseEntity<Void> loadDrone(@PathVariable("serialNumber") String serialNumber, @RequestBody List<Integer> medicationIdList) {
+        dispatchService.load(serialNumber, medicationIdList);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
