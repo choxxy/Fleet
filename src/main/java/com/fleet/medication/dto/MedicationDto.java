@@ -1,10 +1,9 @@
 package com.fleet.medication.dto;
 
-import com.fleet.common.dto.AbstractDto;
 import lombok.Data;
 
 @Data
-public class MedicationDto extends AbstractDto<Long> {
+public class MedicationDto {
     private Long id;
     private String name;
     private Integer weight;

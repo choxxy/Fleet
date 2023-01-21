@@ -34,12 +34,12 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public void deleteById(String id) {
+    public void deleteBySerialNumber(String id) {
         repository.deleteById(id);
     }
 
     @Override
-    public DroneDto findById(String id) {
+    public DroneDto findBySerialNumber(String id) {
         return droneMapper.toDto(repository.findById(id).orElseThrow(ResourceNotFoundException::new));
     }
 
@@ -52,7 +52,7 @@ public class DroneServiceImpl implements DroneService {
 
     @Override
     public DroneDto update(DroneDto droneDto, String id) {
-        DroneDto data = findById(id);
+        DroneDto data = findBySerialNumber(id);
         Drone entity = droneMapper.toEntity(droneDto);
         BeanUtils.copyProperties(data, entity);
         return save(droneMapper.toDto(entity));

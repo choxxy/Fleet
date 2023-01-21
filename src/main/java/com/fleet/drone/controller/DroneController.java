@@ -30,31 +30,31 @@ public class DroneController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DroneDto> findById(@PathVariable("id") String id) {
-        DroneDto drone = droneService.findById(id);
+    @GetMapping("/{serialNumber}")
+    public ResponseEntity<DroneDto> findById(@PathVariable("serialNumber") String id) {
+        DroneDto drone = droneService.findBySerialNumber(id);
         return ResponseEntity.ok(drone);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") String id) {
-        Optional.ofNullable(droneService.findById(id)).orElseThrow(() -> {
+    @DeleteMapping("/{serialNumber}")
+    public ResponseEntity<Void> delete(@PathVariable("serialNumber") String serialNumber) {
+        Optional.ofNullable(droneService.findBySerialNumber(serialNumber)).orElseThrow(() -> {
             log.error("Unable to delete non-existent data！");
             return new ResourceNotFoundException();
         });
-        droneService.deleteById(id);
+        droneService.deleteBySerialNumber(serialNumber);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/page-query")
-    public ResponseEntity<Page<DroneDto>> pageQuery(DroneDto droneDto, @PageableDefault(sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<DroneDto>> pageQuery(DroneDto droneDto, @PageableDefault(sort = "serialNumber", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<DroneDto> dronePage = droneService.findByCondition(droneDto, pageable);
         return ResponseEntity.ok(dronePage);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@RequestBody @Validated DroneDto droneDto, @PathVariable("id") String id) {
-        droneService.update(droneDto, id);
+    public ResponseEntity<Void> update(@RequestBody @Validated DroneDto droneDto, @PathVariable("serialNumber") String serialNumber) {
+        droneService.update(droneDto, serialNumber);
         return ResponseEntity.ok().build();
     }
 }

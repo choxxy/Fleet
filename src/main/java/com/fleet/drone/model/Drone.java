@@ -13,6 +13,9 @@ public class Drone {
     @Id
     @Column(name = "serial_number", length = 100)
     String serialNumber;
+    @Column(name = "model")
+    @Enumerated(EnumType.STRING)
+    @NotNull
     DroneModel model;
     @Column(name = "weight_limit")
     @Min(value = 0)

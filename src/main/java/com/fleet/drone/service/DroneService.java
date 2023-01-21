@@ -7,11 +7,11 @@ import org.springframework.data.domain.Pageable;
 public interface DroneService {
     DroneDto save(DroneDto droneDto);
 
-    void deleteById(String id);
+    void deleteBySerialNumber(String serialNumber);
 
-    DroneDto findById(String id);
+    DroneDto findBySerialNumber(String serialNumber);
 
     Page<DroneDto> findByCondition(DroneDto droneDto, Pageable pageable);
 
-    DroneDto update(DroneDto droneDto, String id);
+    DroneDto update(DroneDto droneDto, String serialNumber);
 }

@@ -47,7 +47,7 @@ public class MedicationController {
     }
 
     @GetMapping("/page-query")
-    public ResponseEntity<Page<MedicationDto>> pageQuery(MedicationDto medicationDto, @PageableDefault(sort = "createAt", direction = Sort.Direction.DESC) Pageable pageable) {
+    public ResponseEntity<Page<MedicationDto>> pageQuery(MedicationDto medicationDto, @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<MedicationDto> medicationPage = medicationService.findByCondition(medicationDto, pageable);
         return ResponseEntity.ok(medicationPage);
     }
