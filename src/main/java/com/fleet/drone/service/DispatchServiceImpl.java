@@ -1,5 +1,7 @@
 package com.fleet.drone.service;
 
+import com.fleet.common.exceptions.LowBatteryException;
+import com.fleet.common.exceptions.WeightExceededException;
 import com.fleet.drone.dto.DispatchDto;
 import com.fleet.drone.dto.DroneDto;
 import com.fleet.drone.mapper.DispatchMapper;
@@ -21,6 +23,9 @@ import java.util.List;
 @Service
 @Transactional
 public class DispatchServiceImpl implements DispatchService {
+
+    private static final int BATTERY_LEVEL_THRESHOLD = 25;
+
     private final DispatchRepository repository;
     private final DroneService droneService;
     private final MedicationService medicationService;
@@ -42,7 +47,7 @@ public class DispatchServiceImpl implements DispatchService {
         this.medicationMapper = medicationMapper;
     }
 
-    private  DispatchDto save(DispatchDto dispatchDto) {
+    private DispatchDto save(DispatchDto dispatchDto) {
         Dispatch entity = dispatchMapper.toEntity(dispatchDto);
         return dispatchMapper.toDto(repository.save(entity));
     }
@@ -66,14 +71,22 @@ public class DispatchServiceImpl implements DispatchService {
     @Override
     public void load(String serialNumber, List<Integer> medicationIdList) {
         Drone drone = droneMapper.toEntity(droneService.findBySerialNumber(serialNumber));
+        int totalWeight = 0;
 
+        if(drone.getBatteryLevel() < BATTERY_LEVEL_THRESHOLD)
+            throw new LowBatteryException("Drone battery level is too low");
 
         for (Integer id : medicationIdList) {
             Medication medication = medicationMapper.toEntity(medicationService.findById(id));
             DispatchDto dispatchDto = new DispatchDto();
             dispatchDto.setDrone(drone);
             dispatchDto.setMedication(medication);
-            save(dispatchDto);
+            totalWeight += medication.getWeight();
+
+            if (totalWeight > drone.getWeightLimit())
+                throw new WeightExceededException("Drone carrying weight exceeded");
+            else
+                save(dispatchDto);
         }
     }
 }

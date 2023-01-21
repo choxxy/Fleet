@@ -12,6 +12,6 @@ public class DroneDto {
     private DroneStatus status;
     private DroneModel model;
     private Integer weightLimit;
-    private Integer batteryCapacity;
+    private Integer batteryLevel;
     private DroneState state;
 }

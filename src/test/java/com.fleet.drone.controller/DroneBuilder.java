@@ -1,6 +1,5 @@
 package com.fleet.drone.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fleet.drone.dto.DroneDto;
 import com.fleet.drone.model.DroneModel;
 import com.fleet.drone.model.DroneState;
@@ -18,7 +17,7 @@ public class DroneBuilder {
         DroneDto dto = new DroneDto();
         dto.setSerialNumber("1");
         dto.setModel(DroneModel.CRUISERWEIGHT);
-        dto.setBatteryCapacity(90);
+        dto.setBatteryLevel(90);
         dto.setStatus(DroneStatus.ACTIVE);
         dto.setWeightLimit(400);
         dto.setState(DroneState.IDLE);
