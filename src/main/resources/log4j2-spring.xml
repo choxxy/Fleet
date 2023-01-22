@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
+
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout
@@ -7,17 +8,15 @@
         </Console>
 
         <RollingFile name="RollingFile"
-                     fileName="./logs/drone-battery-status.log"
-                     filePattern="./logs/$${date:yyyy-MM}/drone-battery-status-%d{-dd-MMMM-yyyy}-%i.log.gz">
+                     fileName="./logs/drone-battery-logger.log"
+                     filePattern="./logs/$${date:yyyy-MM}/drone-battery-logger-%d{-dd-MMMM-yyyy}-%i.log.gz">
             <PatternLayout>
-                <pattern>%d %p %C{1.} [%t] %m%n</pattern>
+                <pattern>%d{yyy-MM-dd HH:mm:ss} - %msg%n</pattern>
             </PatternLayout>
             <Policies>
-                <!-- rollover on startup, daily and when the file reaches
-                    10 MegaBytes -->
+                <!-- rollover on startup, daily and when the file reaches 10 MegaBytes -->
                 <OnStartupTriggeringPolicy />
-                <SizeBasedTriggeringPolicy
-                        size="10 MB" />
+                <SizeBasedTriggeringPolicy size="10 MB" />
                 <TimeBasedTriggeringPolicy />
             </Policies>
         </RollingFile>
@@ -30,8 +29,9 @@
             <AppenderRef ref="RollingFile" />
         </Root>
 
-        <!-- LOG "com.fleet*" at TRACE level -->
-        <Logger name="com.fleet" level="info"/>
+        <logger name="com.fleet.drone.service.DroneServiceImpl" level="info" additivity="false">
+            <AppenderRef ref="RollingFile" />
+        </logger>
     </Loggers>
 
 </Configuration>

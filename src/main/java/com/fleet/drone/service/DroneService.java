@@ -14,17 +14,16 @@ public interface DroneService {
 
     DroneDto findBySerialNumber(String serialNumber);
 
-    Page<DroneDto> findByCondition(DroneDto droneDto, Pageable pageable);
-
     DroneDto update(DroneDto droneDto, String serialNumber);
 
     List<DroneDto> findAll();
 
     String getDroneBatteryLevel(String serialNumber);
 
-    List<DroneDto> findAvailableDrones();
 
     void logDronesBatteryLevel();
 
     void updateBatteryLevel();
+
+    void updateDroneStatus();
 }

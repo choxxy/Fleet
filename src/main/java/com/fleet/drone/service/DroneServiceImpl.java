@@ -3,6 +3,7 @@ package com.fleet.drone.service;
 import com.fleet.drone.dto.DroneDto;
 import com.fleet.drone.mapper.DroneMapper;
 import com.fleet.drone.model.Drone;
+import com.fleet.drone.model.DroneState;
 import com.fleet.drone.repository.DroneRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
@@ -46,13 +47,6 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public Page<DroneDto> findByCondition(DroneDto droneDto, Pageable pageable) {
-        Page<Drone> entityPage = repository.findAll(pageable);
-        List<Drone> entities = entityPage.getContent();
-        return new PageImpl<>(droneMapper.toDto(entities), pageable, entityPage.getTotalElements());
-    }
-
-    @Override
     public DroneDto update(DroneDto droneDto, String serialNumber) {
         DroneDto data = findBySerialNumber(serialNumber);
         Drone entity = droneMapper.toEntity(droneDto);
@@ -73,25 +67,20 @@ public class DroneServiceImpl implements DroneService {
     }
 
     @Override
-    public List<DroneDto> findAvailableDrones() {
-        return null;
-    }
-
-    @Override
     public void logDronesBatteryLevel() {
         List<Drone> drones = repository.findAll();
 
         for (Drone drone : drones) {
-            log.info("Drone {} battery level {}%", drone.getSerialNumber(), drone.getBatteryLevel());
+            log.info("Drone {}, battery level {}%", drone.getSerialNumber(), drone.getBatteryLevel());
         }
     }
 
     @Override
     public void updateBatteryLevel() {
 
-        List<Drone> drones = repository.findAll();
+        List<DroneDto> droneDtoList = findAll();
 
-        for (Drone drone : drones) {
+        for (DroneDto drone : droneDtoList) {
             int level = drone.getBatteryLevel();
             if (level >= 0 && level <= 5) {
                 drone.setBatteryLevel(100);
@@ -99,7 +88,32 @@ public class DroneServiceImpl implements DroneService {
                 level -= 5;
                 drone.setBatteryLevel(level);
             }
-            repository.save(drone);
+            update(drone, drone.getSerialNumber());
+        }
+
+    }
+
+    @Override
+    public void updateDroneStatus() {
+
+        List<DroneDto> droneDtoList = findAll();
+
+        for (DroneDto drone : droneDtoList) {
+            DroneState state = drone.getState();
+
+            switch (state) {
+                case IDLE -> {
+                    continue;
+                }
+                case LOADED -> drone.setState(DroneState.DELIVERING);
+                case DELIVERED -> drone.setState(DroneState.RETURNING);
+                case LOADING -> drone.setState(DroneState.LOADED);
+                case RETURNING -> drone.setState(DroneState.IDLE);
+                case DELIVERING -> drone.setState(DroneState.DELIVERED);
+
+            }
+
+            update(drone, drone.getSerialNumber());
         }
 
     }

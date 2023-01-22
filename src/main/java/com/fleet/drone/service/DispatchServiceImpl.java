@@ -8,6 +8,7 @@ import com.fleet.drone.mapper.DispatchMapper;
 import com.fleet.drone.mapper.DroneMapper;
 import com.fleet.drone.model.Dispatch;
 import com.fleet.drone.model.Drone;
+import com.fleet.drone.model.DroneState;
 import com.fleet.drone.repository.DispatchRepository;
 import com.fleet.medication.dto.MedicationDto;
 import com.fleet.medication.mapper.MedicationMapper;
@@ -73,7 +74,7 @@ public class DispatchServiceImpl implements DispatchService {
         Drone drone = droneMapper.toEntity(droneService.findBySerialNumber(serialNumber));
         int totalWeight = 0;
 
-        if(drone.getBatteryLevel() < BATTERY_LEVEL_THRESHOLD)
+        if (drone.getBatteryLevel() < BATTERY_LEVEL_THRESHOLD)
             throw new LowBatteryException("Drone battery level is too low");
 
         for (Integer id : medicationIdList) {
@@ -88,5 +89,9 @@ public class DispatchServiceImpl implements DispatchService {
             else
                 save(dispatchDto);
         }
+
+        drone.setState(DroneState.LOADING);
+        droneService.update(droneMapper.toDto(drone), drone.getSerialNumber());
+
     }
 }
