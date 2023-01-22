@@ -38,8 +38,6 @@ public class MedicationControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(medicationController)
-                //.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                //.addFilter(CustomFilter::doFilter)
                 .build();
     }
 
@@ -99,14 +97,4 @@ public class MedicationControllerTest {
         Mockito.verifyNoMoreInteractions(medicationService);
     }
 
-    @Test
-    public void delete() throws Exception {
-        Mockito.doNothing().when(medicationService).deleteById(ArgumentMatchers.anyInt());
-        mockMvc.perform(
-                MockMvcRequestBuilders.delete(ENDPOINT_URL + "/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(CustomUtils.asJsonString(MedicationBuilder.getIds()))).andExpect(MockMvcResultMatchers.status().isOk());
-        Mockito.verify(medicationService, Mockito.times(1)).deleteById(Mockito.anyInt());
-        Mockito.verifyNoMoreInteractions(medicationService);
-    }
 }

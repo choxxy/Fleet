@@ -26,7 +26,6 @@
         <!-- LOG everything at INFO level -->
         <Root level="info">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="RollingFile" />
         </Root>
 
         <logger name="com.fleet.drone.service.DroneServiceImpl" level="info" additivity="false">

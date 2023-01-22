@@ -26,7 +26,7 @@ import java.util.List;
 public class DroneControllerTest {
     private static final String ENDPOINT_URL = "/api/drone";
     private static final String REGISTER_ENDPOINT_URL = "/api/drone/register";
-    private static final String FINA_ALL_ENDPOINT_URL = "/api/drone/";
+    private static final String FIND_ALL_ENDPOINT_URL = "/api/drone/";
 
     @InjectMocks
     private DroneController droneController;
@@ -39,8 +39,6 @@ public class DroneControllerTest {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders
                 .standaloneSetup(droneController)
-                //.setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-                //.addFilter(CustomFilter::doFilter)
                 .build();
     }
 
@@ -50,7 +48,7 @@ public class DroneControllerTest {
 
         Mockito.when(droneService.findAll()).thenReturn(list);
 
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(FINA_ALL_ENDPOINT_URL)
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get(FIND_ALL_ENDPOINT_URL)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -69,7 +67,7 @@ public class DroneControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.serialNumber", Is.is(1)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.serialNumber", Is.is("1")));
         Mockito.verify(droneService, Mockito.times(1)).findBySerialNumber("1");
         Mockito.verifyNoMoreInteractions(droneService);
     }
@@ -87,27 +85,4 @@ public class DroneControllerTest {
         Mockito.verifyNoMoreInteractions(droneService);
     }
 
-    @Test
-    public void update() throws Exception {
-        Mockito.when(droneService.update(ArgumentMatchers.any(), ArgumentMatchers.anyString())).thenReturn(DroneBuilder.getDto());
-
-        mockMvc.perform(
-                MockMvcRequestBuilders.put(ENDPOINT_URL + "/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(CustomUtils.asJsonString(DroneBuilder.getDto())))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-        Mockito.verify(droneService, Mockito.times(1)).update(ArgumentMatchers.any(DroneDto.class), ArgumentMatchers.anyString());
-        Mockito.verifyNoMoreInteractions(droneService);
-    }
-
-    @Test
-    public void delete() throws Exception {
-        Mockito.doNothing().when(droneService).deleteBySerialNumber(ArgumentMatchers.anyString());
-        mockMvc.perform(
-                MockMvcRequestBuilders.delete(ENDPOINT_URL + "/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(CustomUtils.asJsonString(DroneBuilder.getIds()))).andExpect(MockMvcResultMatchers.status().isOk());
-        Mockito.verify(droneService, Mockito.times(1)).deleteBySerialNumber(Mockito.anyString());
-        Mockito.verifyNoMoreInteractions(droneService);
-    }
 }

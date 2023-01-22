@@ -35,15 +35,6 @@ public class MedicationController {
         return ResponseEntity.ok(medication);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Integer id) {
-        Optional.ofNullable(medicationService.findById(id)).orElseThrow(() -> {
-            log.error("Unable to delete non-existent data！");
-            return new ResourceNotFoundException();
-        });
-        medicationService.deleteById(id);
-        return ResponseEntity.ok().build();
-    }
 
     @GetMapping("/")
     public ResponseEntity<List<MedicationDto>> getAllDrones() {
